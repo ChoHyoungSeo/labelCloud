@@ -1,4 +1,5 @@
 import json
+import math
 import ntpath
 import os
 from abc import ABC, ABCMeta, abstractmethod
@@ -272,9 +273,13 @@ class KittiFormat(IFormattingInterface, ABC):
             for line in label_lines:
                 line_elements = line.split()
                 centroid = [float(v) for v in line_elements[11:14]]
+                centroid = centroid[2], -centroid[0], centroid[1] - 2.3
                 dimensions = [float(v) for v in line_elements[8:11]]
+                dimensions = dimensions[2], -dimensions[0], dimensions[1]
                 bbox = BBox(*centroid, *dimensions)
-                bbox.set_rotations(0, 0, rel2abs_rotation(float(line_elements[14])))
+                bbox.set_rotations(
+                    0, 0, rel2abs_rotation(float(line_elements[14]) + math.pi / 2)
+                )
                 bbox.set_classname(line_elements[0])
                 labels.append(bbox)
             print("Imported %s labels from %s." % (len(label_lines), path_to_label))
