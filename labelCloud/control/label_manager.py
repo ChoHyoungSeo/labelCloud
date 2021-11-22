@@ -1,3 +1,4 @@
+import logging
 import ntpath
 import os
 from typing import List
@@ -20,7 +21,7 @@ def get_label_strategy(export_format: str, label_folder: str) -> "BaseLabelForma
             label_folder, LabelManager.EXPORT_PRECISION, relative_rotation=True
         )
     elif export_format != "centroid_abs":
-        print(
+        logging.warn(
             f"Unknown export strategy '{export_format}'. Proceeding with default (centroid_abs)!"
         )
     return CentroidFormat(
@@ -51,14 +52,16 @@ class LabelManager(object):
         try:
             return self.label_strategy.import_labels(os.path.splitext(pcd_name)[0])
         except KeyError as key_error:
-            print("Found a key error with %s in the dictionary." % key_error)
-            print(
+            logging.warn("Found a key error with %s in the dictionary." % key_error)
+            logging.warn(
                 "Could not import labels, please check the consistency of the label format."
             )
             return []
         except AttributeError as attribute_error:
-            print("Attribute Error: %s. Expected a dictionary." % attribute_error)
-            print(
+            logging.warn(
+                "Attribute Error: %s. Expected a dictionary." % attribute_error
+            )
+            logging.warn(
                 "Could not import labels, please check the consistency of the label format."
             )
             return []

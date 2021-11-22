@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, List, Optional, Tuple
 
 import numpy as np
 import open3d as o3d
-from labelCloud.utils.logger import (
+from utils.logger import (
     end_section,
     green,
     print_column,
